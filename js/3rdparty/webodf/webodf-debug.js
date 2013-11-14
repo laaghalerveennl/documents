@@ -13646,7 +13646,7 @@ gui.Caret = function Caret(cursor, avatarInitiallyVisible, blinkOnRangeSelect) {
   function handleUpdate() {
     var selectionRect = getSelectionRect(), zoomLevel = cursor.getOdtDocument().getOdfCanvas().getZoomLevel(), caretRect;
     if(isShown && cursor.getSelectionType() === ops.OdtCursor.RangeSelection) {
-      span.style.visibility = "visible"
+      span.style.visibility = "visible";
     }else {
       span.style.visibility = "hidden"
     }
@@ -13662,6 +13662,9 @@ gui.Caret = function Caret(cursor, avatarInitiallyVisible, blinkOnRangeSelect) {
       span.style.height = DEFAULT_CARET_HEIGHT;
       span.style.top = DEFAULT_CARET_TOP
     }
+	if (isShown){
+      textarea.focus();
+	}
   }
   this.handleUpdate = handleUpdate;
   this.refreshCursorBlinking = function() {
@@ -13676,12 +13679,12 @@ gui.Caret = function Caret(cursor, avatarInitiallyVisible, blinkOnRangeSelect) {
   this.setFocus = function() {
     shouldBlink = true;
     avatar.markAsFocussed(true);
-    blink(true)
+    blink(true);
   };
   this.removeFocus = function() {
     shouldBlink = false;
     avatar.markAsFocussed(false);
-    span.style.opacity = "1"
+    span.style.opacity = "1";
   };
   this.show = function() {
     isShown = true;
@@ -13745,6 +13748,7 @@ gui.Caret = function Caret(cursor, avatarInitiallyVisible, blinkOnRangeSelect) {
         callback(err)
       }else {
         cursorNode.removeChild(span);
+		cursorNode.removeChild(textarea);
         callback()
       }
     })
@@ -13755,8 +13759,12 @@ gui.Caret = function Caret(cursor, avatarInitiallyVisible, blinkOnRangeSelect) {
     span.style.top = DEFAULT_CARET_TOP;
     cursorNode = cursor.getNode();
     cursorNode.appendChild(span);
+    textarea = dom.createElementNS(htmlns, "textarea");
+    textarea.style.opacity = "0";
+    cursorNode.appendChild(textarea);
     avatar = new gui.Avatar(cursorNode, avatarInitiallyVisible);
-    handleUpdate()
+    handleUpdate();
+    textarea.focus();
   }
   init()
 };
